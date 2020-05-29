@@ -1,0 +1,41 @@
+steps:
+#First Clone from Google Cloud Source Repository  
+- name: 'gcr.io/cloud-builders/git'
+  args: ['clone','https://source.developers.google.com/p/${_PROJECT}/r/${_REPO_NAME}']
+
+#Build the image 
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build','-t','gcr.io/${_PROJECT}/${_CONTAINERNAME}:${_VERSION}','.']
+
+#Push the image  
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push','gcr.io/${_PROJECT}/${_CONTAINERNAME}:${_VERSION}']
+  
+#Update the container image using kubectl set
+- name: 'gcr.io/cloud-builders/kubectl'
+  args:
+  - 'set'
+  - 'image'
+  - 'deployment/${_DEPLOYMENTNAME}'
+  - '${_CONTAINERNAME}=gcr.io/${_PROJECT}/${_CONTAINERNAME}:${_VERSION}'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=${_ZONE}'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=${_GKE_CLUSTER}'
+  
+substitutions:
+    #GCP Specific configuration. Please DON'T change anything
+    _PROJECT: learn-gcp-with-mahesh
+    _ZONE: asia-south1-a
+    _GKE_CLUSTER: learn-gcp-with-mahesh-gke-cluster
+    
+    #Repository Specific configuration. DevOps can change this settings
+    _DEPLOYMENTNAME: hello-world-service
+    _CONTAINERNAME: hello-world-service    
+    _REPO_NAME: cicd-service
+    
+    # Developers ONLY change
+    _VERSION: v1.0
+    
+options:
+    substitution_option: 'ALLOW_LOOSE'
+
