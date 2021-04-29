@@ -24,9 +24,9 @@ steps:
   
 substitutions:
     #GCP Specific configuration. Please DON'T change anything
-    _PROJECT: learn-gcp-with-mahesh
+    _PROJECT: learn-gcp-with-shiva
     _ZONE: asia-south1-a
-    _GKE_CLUSTER: learn-gcp-with-mahesh-gke-cluster
+    _GKE_CLUSTER: learn-gcp-with-shiva-gke-cluster
     
     #Repository Specific configuration. DevOps can change this settings
     _DEPLOYMENTNAME: hello-world-service
